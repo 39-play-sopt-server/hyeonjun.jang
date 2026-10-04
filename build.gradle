@@ -2,6 +2,14 @@ plugins {
     id 'java'
 }
 
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+tasks.withType(JavaExec).configureEach {
+    jvmArgs '-Dfile.encoding=UTF-8', '-Dstdout.encoding=UTF-8', '-Dstderr.encoding=UTF-8'
+}
+
 group = 'com.guswnsj0112.rest.webservice'
 version = '1.0-SNAPSHOT'
 

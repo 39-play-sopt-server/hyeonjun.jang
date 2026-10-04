@@ -1,6 +1,7 @@
-import Global.ApiResponse;
+package post.client;
+
+import global.ApiResponse;
 import java.util.List;
-import post.PostView;
 import post.controller.PostController;
 import post.domain.Post;
 import post.dto.request.CreatePostRequest;

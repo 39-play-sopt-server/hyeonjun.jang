@@ -1,7 +1,7 @@
 package post.controller;
 
-import Global.ApiResponse;
-import Global.ResponseCode;
+import global.ApiResponse;
+import global.ResponseCode;
 import java.util.List;
 import java.util.NoSuchElementException;
 import post.domain.Post;

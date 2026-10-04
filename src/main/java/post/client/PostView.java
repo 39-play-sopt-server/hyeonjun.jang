@@ -1,6 +1,6 @@
-package post;
+package post.client;
 
-import Global.ApiResponse;
+import global.ApiResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Scanner;

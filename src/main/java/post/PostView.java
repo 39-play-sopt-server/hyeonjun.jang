@@ -1,6 +1,10 @@
+package post;
+
+import Global.ApiResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Scanner;
+import post.domain.Post;
 
 public class PostView {
 
@@ -30,9 +34,19 @@ public class PostView {
         return scanner.nextLine();
     }
 
-    public int inputPostNumber(String message) {
+    public String inputAuthor() {
+        System.out.print("저자: ");
+        return scanner.nextLine();
+    }
+
+    public String inputCategory() {
+        System.out.print("카테고리(NOTICE/FREE/QUESTION): ");
+        return scanner.nextLine();
+    }
+
+    public Long inputPostNumber(String message) {
         System.out.print(message);
-        return Integer.parseInt(scanner.nextLine()) - 1;
+        return Long.parseLong(scanner.nextLine());
     }
 
     public void printPosts(List<Post> posts) {
@@ -43,18 +57,38 @@ public class PostView {
             return;
         }
 
-        for (int i = 0; i < posts.size(); i++) {
-            System.out.println((i + 1) + ". " + posts.get(i).title);
+        int index = 1;
+
+        for (Post post : posts) {
+            System.out.println(index + ". " + post.getTitle());
+            index++;
         }
     }
 
     public void printPost(Post post) {
         System.out.println("\n=== 게시글 ===");
-        System.out.println("제목: " + post.title);
-        System.out.println("내용: " + post.content);
+        System.out.println("제목: " + post.getTitle());
+        System.out.println("내용: " + post.getContent());
+        System.out.println("저자: " + post.getAuthor());
+        System.out.println("작성시각: " + post.getCreatedAt());
+        System.out.println("카테고리: " + post.getCategory());
     }
 
-    public void printMessage(String message) {
-        System.out.println(message);
+    public void printMessage(ApiResponse<?> response) {
+        System.out.println(response.getMessage());
     }
+    public void printMessage(String response) {
+        System.out.println(response);
+    }
+
+    public void printResponse(ApiResponse<List<Post>> response) {
+        System.out.println(response.getMessage());
+
+        if (response.getData() != null) {
+            printPosts(response.getData());
+        }
+    }
+
+
+
 }

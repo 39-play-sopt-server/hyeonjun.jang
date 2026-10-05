@@ -1,5 +1,6 @@
 package post.client;
 
+
 import global.ApiResponse;
 import java.util.List;
 import post.controller.PostController;

@@ -47,4 +47,14 @@ public class ApiResponse<T> {
                 null
         );
     }
+
+    public static <T> ApiResponse<T> fail(ResponseCode responseCode, String message) {
+        return new ApiResponse<>(
+                responseCode.getCode(),
+                message,
+                null
+        );
+    }
+
+
 }

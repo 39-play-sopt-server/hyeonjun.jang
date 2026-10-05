@@ -17,8 +17,12 @@ public class PostController {
     }
 
     public ApiResponse createPost(CreatePostRequest request) {
-        postService.createPost(request);
-        return ApiResponse.success(ResponseCode.CREATED);
+        try {
+            postService.createPost(request);
+            return ApiResponse.success(ResponseCode.CREATED);
+        } catch (IllegalArgumentException e) {
+            return ApiResponse.fail(ResponseCode.BAD_REQUEST, e.getMessage());
+        }
     }
 
     public ApiResponse<List<Post>> getAllPost() {

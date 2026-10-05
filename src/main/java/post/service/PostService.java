@@ -9,6 +9,7 @@ import post.domain.Post;
 import post.domain.PostCategory;
 import post.dto.request.CreatePostRequest;
 import post.dto.request.UpdatePostRequest;
+import post.execption.PostNotFoundException;
 import post.repository.PostRepository;
 import post.validator.PostValidator;
 
@@ -47,7 +48,7 @@ public class PostService {
         List<Post> posts = postRepository.findAllPost();
 
         if (posts.isEmpty()) {
-            throw new NoSuchElementException("게시글이 없습니다.");
+            throw new PostNotFoundException("게시글이 없습니다.");
         }
 
         return posts;
@@ -61,7 +62,7 @@ public class PostService {
         }
         Post post = postRepository.findById(id);
         if (post == null) {
-            throw new NoSuchElementException("존재하지 않는 게시글입니다.");
+            throw new PostNotFoundException("존재하지 않는 게시글입니다.");
         }
         return post;
     }

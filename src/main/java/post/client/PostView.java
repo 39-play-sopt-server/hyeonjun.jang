@@ -19,9 +19,15 @@ public class PostView {
         System.out.println("4. 게시글 수정");
         System.out.println("5. 게시글 삭제");
         System.out.println("6. 종료");
-        System.out.print("선택: ");
+        while (true) {
+            System.out.print("선택: ");
 
-        return Integer.parseInt(scanner.nextLine());
+            try {
+                return Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("숫자만 입력해주세요.");
+            }
+        }
     }
 
     public String inputTitle() {
@@ -45,8 +51,15 @@ public class PostView {
     }
 
     public Long inputPostNumber(String message) {
-        System.out.print(message);
-        return Long.parseLong(scanner.nextLine());
+        while (true) {
+            System.out.print(message);
+
+            try {
+                return Long.parseLong(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("숫자만 입력해주세요.");
+            }
+        }
     }
 
     public void printPosts(List<Post> posts) {
@@ -77,6 +90,7 @@ public class PostView {
     public void printMessage(ApiResponse<?> response) {
         System.out.println(response.getMessage());
     }
+
     public void printMessage(String response) {
         System.out.println(response);
     }
@@ -88,7 +102,6 @@ public class PostView {
             printPosts(response.getData());
         }
     }
-
 
 
 }

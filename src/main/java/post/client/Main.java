@@ -4,9 +4,9 @@ package post.client;
 import global.ApiResponse;
 import java.util.List;
 import post.controller.PostController;
-import post.domain.Post;
 import post.dto.request.CreatePostRequest;
 import post.dto.request.UpdatePostRequest;
+import post.dto.response.PostResponse;
 import post.repository.PostRepository;
 import post.service.PostService;
 
@@ -32,13 +32,13 @@ public class Main {
                     postView.printMessage(postController.createPost(createPostRequest));
                 }
                 case 2 -> {
-                    ApiResponse<List<Post>> response = postController.getAllPost();
+                    ApiResponse<List<PostResponse>> response = postController.getAllPost();
                     postView.printResponse(response);
                 }
                 case 3 -> {
                     Long id = postView.inputPostNumber("조회할 게시글 번호: ");
 
-                    ApiResponse<Post> response = postController.getPost(id);
+                    ApiResponse<PostResponse> response = postController.getPost(id);
 
                     postView.printMessage(response);
 

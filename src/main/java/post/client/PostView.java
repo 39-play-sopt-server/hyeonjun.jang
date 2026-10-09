@@ -4,7 +4,7 @@ import global.ApiResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Scanner;
-import post.domain.Post;
+import post.dto.response.PostResponse;
 
 public class PostView {
 
@@ -62,7 +62,7 @@ public class PostView {
         }
     }
 
-    public void printPosts(List<Post> posts) {
+    public void printPosts(List<PostResponse> posts) {
         System.out.println("\n=== 게시글 목록 ===");
 
         if (posts.isEmpty()) {
@@ -72,13 +72,13 @@ public class PostView {
 
         int index = 1;
 
-        for (Post post : posts) {
+        for (PostResponse post : posts) {
             System.out.println(index + ". " + post.getTitle());
             index++;
         }
     }
 
-    public void printPost(Post post) {
+    public void printPost(PostResponse post) {
         System.out.println("\n=== 게시글 ===");
         System.out.println("제목: " + post.getTitle());
         System.out.println("내용: " + post.getContent());
@@ -95,7 +95,7 @@ public class PostView {
         System.out.println(response);
     }
 
-    public void printResponse(ApiResponse<List<Post>> response) {
+    public void printResponse(ApiResponse<List<PostResponse>> response) {
         System.out.println(response.getMessage());
 
         if (response.getData() != null) {

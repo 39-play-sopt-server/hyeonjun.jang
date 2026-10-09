@@ -9,6 +9,7 @@ import post.domain.Post;
 import post.domain.PostCategory;
 import post.dto.request.CreatePostRequest;
 import post.dto.request.UpdatePostRequest;
+import post.dto.response.PostResponse;
 import post.execption.PostNotFoundException;
 import post.repository.PostRepository;
 import post.validator.PostValidator;
@@ -44,8 +45,10 @@ public class PostService {
         postRepository.save(post);
     }
 
-    public List<Post> getPosts() {
-        List<Post> posts = postRepository.findAllPost();
+    public List<PostResponse> getPosts() {
+        List<PostResponse> posts = postRepository.findAllPost().stream()
+                .map(PostResponse::from)
+                .toList();
 
         if (posts.isEmpty()) {
             throw new PostNotFoundException("게시글이 없습니다.");
@@ -67,11 +70,11 @@ public class PostService {
         return post;
     }
 
-    public Post getPost(Long id) {
-        return validateAndGetPost(id);
+    public PostResponse getPost(Long id) {
+        return PostResponse.from(validateAndGetPost(id));
     }
 
-    public Post updatePost(Long id, UpdatePostRequest postRequest) {
+    public PostResponse updatePost(Long id, UpdatePostRequest postRequest) {
         // 수정 내용 검증
         validator.validateContent(postRequest.content);
         validator.validateTitle(postRequest.title);
@@ -88,7 +91,7 @@ public class PostService {
                 category
         );
 
-        return post;
+        return PostResponse.from(post);
     }
 
 

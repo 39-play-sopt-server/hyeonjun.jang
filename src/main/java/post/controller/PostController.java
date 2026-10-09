@@ -4,9 +4,10 @@ import global.ApiResponse;
 import global.ResponseCode;
 import java.util.List;
 import java.util.NoSuchElementException;
-import post.domain.Post;
 import post.dto.request.CreatePostRequest;
 import post.dto.request.UpdatePostRequest;
+import post.dto.response.PostResponse;
+import post.execption.PostNotFoundException;
 import post.service.PostService;
 
 public class PostController {
@@ -25,17 +26,17 @@ public class PostController {
         }
     }
 
-    public ApiResponse<List<Post>> getAllPost() {
+    public ApiResponse<List<PostResponse>> getAllPost() {
         try {
             return ApiResponse.success(ResponseCode.OK, postService.getPosts());
-        } catch (NoSuchElementException e) {
+        } catch (PostNotFoundException e) {
             return ApiResponse.fail(ResponseCode.POST_NOT_FOUND);
         }
     }
 
-    public ApiResponse<Post> getPost(Long id) {
+    public ApiResponse<PostResponse> getPost(Long id) {
         try {
-            Post result = postService.getPost(id);
+            PostResponse result = postService.getPost(id);
             return ApiResponse.success(ResponseCode.OK, result);
         } catch (NoSuchElementException e) {
             return ApiResponse.fail(ResponseCode.POST_NOT_FOUND);
@@ -44,9 +45,9 @@ public class PostController {
         }
     }
 
-    public ApiResponse<Post> updatePost(Long id, UpdatePostRequest request) {
+    public ApiResponse<PostResponse> updatePost(Long id, UpdatePostRequest request) {
         try {
-            Post result = postService.updatePost(id, request);
+            PostResponse result = postService.updatePost(id, request);
             return ApiResponse.success(ResponseCode.UPDATED, result);
         } catch (NoSuchElementException e) {
             return ApiResponse.fail(ResponseCode.POST_NOT_FOUND);

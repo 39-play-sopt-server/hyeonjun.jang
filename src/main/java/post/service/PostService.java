@@ -4,16 +4,19 @@ package post.service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Locale;
-import java.util.NoSuchElementException;
+import org.springframework.stereotype.Service;
 import post.domain.Post;
 import post.domain.PostCategory;
 import post.dto.request.CreatePostRequest;
 import post.dto.request.UpdatePostRequest;
 import post.dto.response.PostResponse;
+import post.execption.InvalidPostCategoryException;
 import post.execption.PostNotFoundException;
 import post.repository.PostRepository;
 import post.validator.PostValidator;
 
+
+@Service
 public class PostService {
     private Long nextId = 1L;
     private final PostRepository postRepository;
@@ -29,16 +32,7 @@ public class PostService {
         validator.validateContent(postRequest.content);
 
         String createdAt = LocalDateTime.now().toString();
-        PostCategory category = null;
-
-        // 클라이언트가 소문자로 보냈을 시 방어적으로 설계하기 위함
-        try {
-            category = PostCategory.valueOf(
-                    postRequest.category.toUpperCase(Locale.ROOT)
-            );
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("올바르지 않은 카테고리입니다.");
-        }
+        PostCategory category = parseCategory(postRequest.category);
 
         Post post = new Post(nextId++, postRequest.title, postRequest.content, category, createdAt, postRequest.author);
 
@@ -49,10 +43,6 @@ public class PostService {
         List<PostResponse> posts = postRepository.findAllPost().stream()
                 .map(PostResponse::from)
                 .toList();
-
-        if (posts.isEmpty()) {
-            throw new PostNotFoundException("게시글이 없습니다.");
-        }
 
         return posts;
     }
@@ -65,7 +55,7 @@ public class PostService {
         }
         Post post = postRepository.findById(id);
         if (post == null) {
-            throw new PostNotFoundException("존재하지 않는 게시글입니다.");
+            throw new PostNotFoundException();
         }
         return post;
     }
@@ -81,9 +71,7 @@ public class PostService {
 
         Post post = validateAndGetPost(id);
 
-        PostCategory category = PostCategory.valueOf(
-                postRequest.category.toUpperCase(Locale.ROOT)
-        );
+        PostCategory category = parseCategory(postRequest.category);
 
         post.update(
                 postRequest.title,
@@ -99,6 +87,17 @@ public class PostService {
 
         Post post = validateAndGetPost(id);
         postRepository.deletebyId(id);
+    }
+
+    private PostCategory parseCategory(String category) {
+        if (category == null) {
+            throw new InvalidPostCategoryException();
+        }
+        try {
+            return PostCategory.valueOf(category.toUpperCase(Locale.ROOT));
+        } catch (IllegalArgumentException e) {
+            throw new InvalidPostCategoryException();
+        }
     }
 
 }

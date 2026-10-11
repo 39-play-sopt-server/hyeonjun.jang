@@ -16,12 +16,10 @@ public class PostRepository {
         return post;
     }
 
-    // ArrayList로 하려다가 조회만 하는데 가변 리스트는 필요없다는 생각에 List로
     public List<Post> findAllPost() {
         return new ArrayList<>(posts.values());
     }
 
-    // HashMap 아니였다면 stream 으로 펼쳐서 filter 를 쓰고 했겠지..
     public Post findById(Long id) {
         return posts.get(id);
     }

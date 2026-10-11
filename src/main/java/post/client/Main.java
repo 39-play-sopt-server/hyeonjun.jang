@@ -32,13 +32,13 @@ public class Main {
                     postView.printMessage(postController.createPost(createPostRequest));
                 }
                 case 2 -> {
-                    ApiResponse<List<PostResponse>> response = postController.getAllPost();
+                    ApiResponse<List<PostResponse>> response = postController.readPosts(1);
                     postView.printResponse(response);
                 }
                 case 3 -> {
                     Long id = postView.inputPostNumber("조회할 게시글 번호: ");
 
-                    ApiResponse<PostResponse> response = postController.getPost(id);
+                    ApiResponse<PostResponse> response = postController.readPost(id);
 
                     postView.printMessage(response);
 

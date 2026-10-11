@@ -8,9 +8,9 @@ public enum ResponseCode {
     DELETED(200, "게시글 삭제 성공"),
 
     BAD_REQUEST(400, "잘못된 요청입니다."),
-    INVALID_CATEGORY(400, "올바르지 않은 카테고리입니다."),
+    POST_INVALID_CATEGORY(400, "올바르지 않은 카테고리입니다."),
     POST_NOT_FOUND(404, "게시글이 없습니다."),
-    NOT_FOUND(404, "게시글을 찾을 수 없습니다."),
+    NOT_FOUND(404, "요청한 리소스를 찾을 수 없습니다."),
     INTERNAL_SERVER_ERROR(500, "서버 오류가 발생했습니다.");
 
     private final int code;

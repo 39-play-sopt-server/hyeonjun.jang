@@ -3,8 +3,10 @@ package post.repository;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import org.springframework.stereotype.Repository;
 import post.domain.Post;
 
+@Repository
 public class PostRepository {
     private static final HashMap<Long, Post> posts = new HashMap<>();
 

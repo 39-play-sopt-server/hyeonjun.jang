@@ -57,8 +57,12 @@ public class PostService {
             throw new SizeException();
         }
 
+
+        // 카테고리 먼저 검사 (원래 filter에서 같이 검증했더니 저장된 게시글이 없는 경우 해당 검증 로직이 작동을 안했음)
+        PostCategory parsedCategory = parseCategory(category);
+
         List<PostResponse> posts = postRepository.findAllPost().stream()
-                .filter(p -> p.getCategory().equals(parseCategory(category)))
+                .filter(p -> p.getCategory() == parsedCategory)
                 .map(PostResponse::from)
                 .toList();
 
@@ -127,8 +131,7 @@ public class PostService {
 
 
     public void deletePost(Long id) {
-
-        Post post = validateAndGetPost(id);
+        validateAndGetPost(id);
         postRepository.deletebyId(id);
     }
 

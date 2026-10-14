@@ -1,3 +1,4 @@
+// 변경 후
 plugins {
     id 'java'
     id 'org.springframework.boot' version '4.0.8'
@@ -13,12 +14,10 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-webmvc'
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.1'
     testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
     testImplementation platform('org.junit:junit-bom:6.0.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
 }
 
 test {

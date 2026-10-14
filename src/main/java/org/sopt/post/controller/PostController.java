@@ -20,7 +20,7 @@ import org.sopt.post.controller.dto.response.PostResponse;
 
 @RestController
 @RequestMapping(path = "/api/v1/posts")
-public class PostController implements PostApi{
+public class PostController implements PostApi {
     private final PostFacade postFacade;
 
     public PostController(PostFacade postFacade) {
@@ -42,7 +42,7 @@ public class PostController implements PostApi{
             @RequestParam(required = false, defaultValue = "FREE") String category,
             @RequestParam(required = false, defaultValue = "1") int page,
             @RequestParam(required = false, defaultValue = "10") int size
-            ) {
+    ) {
         List<PostResponse> result = postFacade.getPosts(category, page, size);
 
         return CommonResponse.success(PostSuccessCode.POSTS_FOUND, result);

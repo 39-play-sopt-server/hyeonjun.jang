@@ -14,7 +14,6 @@ import org.sopt.post.service.vo.UpdatePostCommand;
 import org.springframework.stereotype.Service;
 import org.sopt.post.domain.Post;
 import org.sopt.post.enums.PostCategory;
-import org.sopt.post.controller.dto.response.PostResponse;
 import org.sopt.post.execption.PostNotFoundException;
 import org.sopt.post.repository.PostRepository;
 import org.sopt.post.validator.PostValidator;
@@ -48,7 +47,7 @@ public class PostService {
         postRepository.save(post);
     }
 
-    public List<PostResponse> getPosts(String category, int page, int size) {
+    public List<Post> getPosts(String category, int page, int size) {
         // 기본값이 있어서 이럴 일은 없겠지만 혹시 몰라서 추가
         if (page < 1) {
             throw new PageException();
@@ -57,13 +56,11 @@ public class PostService {
             throw new SizeException();
         }
 
-
         // 카테고리 먼저 검사 (원래 filter에서 같이 검증했더니 저장된 게시글이 없는 경우 해당 검증 로직이 작동을 안했음)
         PostCategory parsedCategory = parseCategory(category);
 
-        List<PostResponse> posts = postRepository.findAllPost().stream()
+        List<Post> posts = postRepository.findAllPost().stream()
                 .filter(p -> p.getCategory() == parsedCategory)
-                .map(PostResponse::from)
                 .toList();
 
         // 리스트 인덱스는 0부터 시작하니까 -1 을 해줘야함
@@ -91,12 +88,12 @@ public class PostService {
         return post;
     }
 
-    public PostResponse getPost(Long id) {
+    public Post getPost(Long id) {
         Post post = validateAndGetPost(id);
 
         post.increaseHits();
 
-        return PostResponse.from(post);
+        return post;
     }
 
     public void updatePost(Long id, UpdatePostCommand command) {

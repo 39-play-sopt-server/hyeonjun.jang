@@ -3,6 +3,7 @@ package org.sopt.post.facade;
 import java.util.List;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+
 import org.sopt.post.controller.dto.response.PostResponse;
 import org.sopt.post.service.PostService;
 import org.sopt.post.service.vo.CreatePostCommand;
@@ -23,7 +24,7 @@ public class PostFacade {
 
     public void CreatePost(CreatePostCommand command) {
         lock.writeLock().lock();
-        try{
+        try {
             postService.createPost(command);
         } finally {
             lock.writeLock().unlock();
@@ -32,18 +33,19 @@ public class PostFacade {
 
     public List<PostResponse> getPosts(String category, int page, int size) {
         lock.readLock().lock();
-
-        try{
-            return postService.getPosts(category, page, size);
+        try {
+            return postService.getPosts(category, page, size).stream()
+                    .map(PostResponse::from)
+                    .toList();
         } finally {
             lock.readLock().unlock();
         }
     }
 
-    public PostResponse getPost(Long postId){
+    public PostResponse getPost(Long postId) {
         lock.writeLock().lock();
-        try{
-            return postService.getPost(postId);
+        try {
+            return PostResponse.from(postService.getPost(postId));
         } finally {
             lock.writeLock().unlock();
         }
@@ -51,7 +53,7 @@ public class PostFacade {
 
     public void UpdatePost(Long postId, UpdatePostCommand command) {
         lock.writeLock().lock();
-        try{
+        try {
             postService.updatePost(postId, command);
         } finally {
             lock.writeLock().unlock();
@@ -60,7 +62,7 @@ public class PostFacade {
 
     public void deletePost(Long postId) {
         lock.writeLock().lock();
-        try{
+        try {
             postService.deletePost(postId);
         } finally {
             lock.writeLock().unlock();

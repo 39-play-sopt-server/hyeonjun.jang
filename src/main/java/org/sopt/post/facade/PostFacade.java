@@ -22,7 +22,7 @@ public class PostFacade {
         this.postService = postService;
     }
 
-    public void CreatePost(CreatePostCommand command) {
+    public void createPost(CreatePostCommand command) {
         lock.writeLock().lock();
         try {
             postService.createPost(command);
@@ -51,7 +51,7 @@ public class PostFacade {
         }
     }
 
-    public void UpdatePost(Long postId, UpdatePostCommand command) {
+    public void updatePost(Long postId, UpdatePostCommand command) {
         lock.writeLock().lock();
         try {
             postService.updatePost(postId, command);

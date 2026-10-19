@@ -4,15 +4,19 @@ import org.springframework.validation.BindException;
 import org.sopt.global.code.ErrorCode;
 import org.sopt.global.code.GlobalErrorCode;
 import org.sopt.global.dto.CommonResponse;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @RestControllerAdvice
-public class GlobalExceptionHandler {
+public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     // 내가 만든 예외를 직접 처리
     // 페이지 읎다, 카테고리 이상하다 등
@@ -37,21 +41,24 @@ public class GlobalExceptionHandler {
 
     // 쿼리 파라미터나 객체 바인딩 과정에서 검증에 실패한 경우
     @ExceptionHandler(BindException.class)
-    public ResponseEntity<CommonResponse<?>> handleBindException(BindException exception) {
+    public ResponseEntity<Object> handleBindException(BindException exception) {
 
         return handleValidationException(exception);
     }
 
     // @Valid 검증이 실패했을 때 처리
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<CommonResponse<?>> handleMethodArgumentNotValidException(
-            MethodArgumentNotValidException exception) {
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(
+            MethodArgumentNotValidException exception,
+            HttpHeaders headers,
+            HttpStatusCode status,
+            WebRequest request) {
 
         return handleValidationException(exception);
     }
 
     // 검증 예외에서 첫 번째 필드 오류 메시지를 꺼내 400 응답 생성
-    private ResponseEntity<CommonResponse<?>> handleValidationException(BindException exception) {
+    private ResponseEntity<Object> handleValidationException(BindException exception) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
 
         String message = exception.getBindingResult()

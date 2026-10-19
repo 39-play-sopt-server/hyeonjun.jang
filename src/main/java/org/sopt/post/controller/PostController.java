@@ -31,7 +31,7 @@ public class PostController implements PostApi {
     public CommonResponse<Void> createPost(
             @RequestBody(required = true) CreatePostRequest request
     ) {
-        postFacade.CreatePost(request.toCommand());
+        postFacade.createPost(request.toCommand());
 
         return CommonResponse.success(PostSuccessCode.POST_CREATED);
 
@@ -63,7 +63,7 @@ public class PostController implements PostApi {
             @PathVariable(name = "postId") Long postId,
             @RequestBody(required = true) UpdatePostRequest request
     ) {
-        postFacade.UpdatePost(postId, request.toCommand());
+        postFacade.updatePost(postId, request.toCommand());
 
         return CommonResponse.success(PostSuccessCode.POST_UPDATED);
     }

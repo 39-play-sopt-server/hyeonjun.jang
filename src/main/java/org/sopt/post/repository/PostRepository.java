@@ -1,30 +1,17 @@
 package org.sopt.post.repository;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
-import org.springframework.stereotype.Repository;
+import java.util.Optional;
 import org.sopt.post.domain.Post;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 @Repository
-public class PostRepository {
-    private static final HashMap<Long, Post> posts = new LinkedHashMap<>();
+public interface PostRepository extends JpaRepository<Post, Long> {
 
-    public Post save(Post post) {
-        posts.put(post.getId(), post);
-        return post;
-    }
+    Optional<Post> findById(Long id);
+    List<Post> findAll();
 
-    public List<Post> findAllPost() {
-        return new ArrayList<>(posts.values());
-    }
 
-    public Post findById(Long id) {
-        return posts.get(id);
-    }
-
-    public void deletebyId(Long id) {
-        posts.remove(id);
-    }
+    void deleteById(Long id);
 }

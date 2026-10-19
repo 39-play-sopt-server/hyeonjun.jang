@@ -1,26 +1,28 @@
 
 package org.sopt.post.service;
 
+import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Locale;
-import org.sopt.global.exception.PageException;
-import org.sopt.global.exception.SizeException;
+import java.util.Optional;
+import org.sopt.common.exception.PageException;
+import org.sopt.common.exception.SizeException;
 import org.sopt.post.execption.PostEmptyUpdateValue;
 import org.sopt.post.execption.PostIdException;
 import org.sopt.post.execption.PostInvalidCategory;
+import org.sopt.post.repository.PostRepository;
 import org.sopt.post.service.vo.CreatePostCommand;
 import org.sopt.post.service.vo.UpdatePostCommand;
 import org.springframework.stereotype.Service;
 import org.sopt.post.domain.Post;
 import org.sopt.post.enums.PostCategory;
 import org.sopt.post.execption.PostNotFoundException;
-import org.sopt.post.repository.PostRepository;
 import org.sopt.post.validator.PostValidator;
 
 @Service
+@Transactional(readOnly = true) // Dirty reading is 우웩
 public class PostService {
-    private Long nextId = 1L;
     private final PostRepository postRepository;
 
 
@@ -29,26 +31,22 @@ public class PostService {
         this.postRepository = postRepository;
     }
 
+    @Transactional
     public void createPost(CreatePostCommand command) {
 
         //검증 먼저
         PostValidator.validateTitle(command.title());
         PostValidator.validateContent(command.content());
 
-        // 시간 관리
-        String createdAt = LocalDateTime.now().toString();
-        String updatedAt = LocalDateTime.now().toString();
-
         PostCategory category = parseCategory(command.category());
 
-        Post post = new Post(nextId++, command.title(), command.content(), category, 0, createdAt, updatedAt,
+        Post post = new Post(command.title(), command.content(), category, 0,
                 command.author());
 
         postRepository.save(post);
     }
 
     public List<Post> getPosts(String category, int page, int size) {
-        // 기본값이 있어서 이럴 일은 없겠지만 혹시 몰라서 추가
         if (page < 1) {
             throw new PageException();
         }
@@ -56,10 +54,9 @@ public class PostService {
             throw new SizeException();
         }
 
-        // 카테고리 먼저 검사 (원래 filter에서 같이 검증했더니 저장된 게시글이 없는 경우 해당 검증 로직이 작동을 안했음)
         PostCategory parsedCategory = parseCategory(category);
 
-        List<Post> posts = postRepository.findAllPost().stream()
+        List<Post> posts = postRepository.findAll().stream()
                 .filter(p -> p.getCategory() == parsedCategory)
                 .toList();
 
@@ -81,11 +78,11 @@ public class PostService {
         if (id <= 0) {
             throw new PostIdException();
         }
-        Post post = postRepository.findById(id);
-        if (post == null) {
+        Optional<Post> post = postRepository.findById(id);
+        if (post.isEmpty()) {
             throw new PostNotFoundException();
         }
-        return post;
+        return post.orElse(null);
     }
 
     public Post getPost(Long id) {
@@ -96,6 +93,8 @@ public class PostService {
         return post;
     }
 
+
+    @Transactional
     public void updatePost(Long id, UpdatePostCommand command) {
         if (command.title() == null && command.content() == null && command.category() == null) {
             throw new PostEmptyUpdateValue();
@@ -121,15 +120,14 @@ public class PostService {
             category = parseCategory(command.category());
         }
 
-        String updatedAt = LocalDateTime.now().toString();
-
-        post.update(title, content, category, updatedAt);
+        post.update(title, content, category);
     }
 
 
+    @Transactional
     public void deletePost(Long id) {
         validateAndGetPost(id);
-        postRepository.deletebyId(id);
+        postRepository.deleteById(id);
     }
 
     private PostCategory parseCategory(String category) {

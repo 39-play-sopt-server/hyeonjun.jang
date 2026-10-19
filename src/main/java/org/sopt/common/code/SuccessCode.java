@@ -1,4 +1,4 @@
-package org.sopt.global.code;
+package org.sopt.common.code;
 
 public interface SuccessCode {
     String name();

@@ -1,10 +1,10 @@
-package org.sopt.global.swagger;
+package org.sopt.common.swagger;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import org.sopt.global.exception.BusinessException;
+import org.sopt.common.exception.BusinessException;
 
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)

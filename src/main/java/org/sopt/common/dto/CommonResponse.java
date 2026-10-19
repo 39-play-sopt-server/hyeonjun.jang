@@ -1,8 +1,8 @@
-package org.sopt.global.dto;
+package org.sopt.common.dto;
 
-import org.sopt.global.code.ErrorCode;
-import org.sopt.global.code.GlobalErrorCode;
-import org.sopt.global.code.SuccessCode;
+import org.sopt.common.code.ErrorCode;
+import org.sopt.common.code.GlobalErrorCode;
+import org.sopt.common.code.SuccessCode;
 
 public record CommonResponse<T>(
         int status,

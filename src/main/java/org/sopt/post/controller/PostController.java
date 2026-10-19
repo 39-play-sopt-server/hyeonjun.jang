@@ -1,7 +1,7 @@
 package org.sopt.post.controller;
 
 import java.util.List;
-import org.sopt.global.dto.CommonResponse;
+import org.sopt.common.dto.CommonResponse;
 import org.sopt.post.code.PostSuccessCode;
 import org.sopt.post.controller.dto.request.CreatePostRequest;
 import org.sopt.post.controller.dto.request.UpdatePostRequest;

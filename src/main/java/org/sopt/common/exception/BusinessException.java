@@ -1,6 +1,6 @@
-package org.sopt.global.exception;
+package org.sopt.common.exception;
 
-import org.sopt.global.code.ErrorCode;
+import org.sopt.common.code.ErrorCode;
 
 public class BusinessException extends RuntimeException {
     private final ErrorCode errorCode;

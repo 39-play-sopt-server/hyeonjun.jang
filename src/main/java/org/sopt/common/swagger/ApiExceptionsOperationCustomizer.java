@@ -1,4 +1,4 @@
-package org.sopt.global.swagger;
+package org.sopt.common.swagger;
 
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.examples.Example;
@@ -8,9 +8,9 @@ import io.swagger.v3.oas.models.responses.ApiResponse;
 import io.swagger.v3.oas.models.responses.ApiResponses;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import org.sopt.global.code.ErrorCode;
-import org.sopt.global.dto.CommonResponse;
-import org.sopt.global.exception.BusinessException;
+import org.sopt.common.code.ErrorCode;
+import org.sopt.common.dto.CommonResponse;
+import org.sopt.common.exception.BusinessException;
 import org.springdoc.core.customizers.OperationCustomizer;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;

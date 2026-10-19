@@ -1,6 +1,6 @@
-package org.sopt.global.exception;
+package org.sopt.common.exception;
 
-import org.sopt.global.code.GlobalErrorCode;
+import org.sopt.common.code.GlobalErrorCode;
 
 public class SizeException extends BusinessException {
 

@@ -1,6 +1,6 @@
 package org.sopt.post.code;
 
-import org.sopt.global.code.SuccessCode;
+import org.sopt.common.code.SuccessCode;
 
 public enum PostSuccessCode implements SuccessCode {
     POST_CREATED("게시글 작성 완료!"),

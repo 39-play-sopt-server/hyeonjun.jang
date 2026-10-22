@@ -1,9 +1,9 @@
-package org.sopt.global.exception;
+package org.sopt.common.exception;
 
 import org.springframework.validation.BindException;
-import org.sopt.global.code.ErrorCode;
-import org.sopt.global.code.GlobalErrorCode;
-import org.sopt.global.dto.CommonResponse;
+import org.sopt.common.code.ErrorCode;
+import org.sopt.common.code.GlobalErrorCode;
+import org.sopt.common.dto.CommonResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;

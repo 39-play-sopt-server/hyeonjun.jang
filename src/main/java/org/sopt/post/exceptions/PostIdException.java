@@ -1,4 +1,4 @@
-package org.sopt.post.execption;
+package org.sopt.post.exceptions;
 
 import org.sopt.common.exception.BusinessException;
 import org.sopt.post.code.PostErrorCode;

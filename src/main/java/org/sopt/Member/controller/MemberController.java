@@ -8,13 +8,14 @@ import org.sopt.Member.service.MemberService;
 import org.sopt.common.dto.CommonResponse;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/member")
 public class MemberController implements MemberApi {
     private final MemberService memberService;
 
@@ -30,9 +31,9 @@ public class MemberController implements MemberApi {
 
         return CommonResponse.success(MemberSuccessCode.MEMBER_CREATED);
     }
-    @GetMapping
+    @GetMapping("/{id}")
     public CommonResponse<Member> getMember(
-            @RequestBody(required = true) Long id
+            @PathVariable(required = true) Long id
     ) {
         Member member = memberService.getMemberById(id);
         return CommonResponse.success(MemberSuccessCode.MEMBER_FOUND, member);
@@ -44,9 +45,9 @@ public class MemberController implements MemberApi {
         return CommonResponse.success(MemberSuccessCode.MEMBERS_FOUND, members);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     public CommonResponse<Void> deleteMember(
-            @RequestBody(required = true) Long id
+            @PathVariable(required = true) Long id
     ) {
         memberService.delete(id);
 

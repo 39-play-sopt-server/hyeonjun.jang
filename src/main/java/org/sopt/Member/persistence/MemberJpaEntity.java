@@ -17,7 +17,7 @@ import org.sopt.common.entity.BaseTimeEntity;
 
 @Entity(name = "Member")
 @Table(name = "Member")
-@SQLRestriction("deleted_at")
+@SQLRestriction("deleted_at IS NULL")
 @SQLDelete(sql = "UPDATE member SET deleted_at = NOW() WHERE id = ?")
 public class MemberJpaEntity extends BaseTimeEntity {
     @Id

@@ -1,5 +1,7 @@
 package org.sopt.post.controller.dto.request;
 
+import java.util.Locale;
+import org.sopt.post.enums.PostCategory;
 import org.sopt.post.service.vo.UpdatePostCommand;
 
 public record UpdatePostRequest(
@@ -12,7 +14,7 @@ public record UpdatePostRequest(
         return new UpdatePostCommand(
                 title,
                 content,
-                category
+                PostCategory.from(category.toUpperCase(Locale.ROOT))
         );
     }
 }

@@ -1,18 +1,19 @@
 package org.sopt.post.service.vo;
 
+import org.sopt.post.enums.PostCategory;
+
 public record CreatePostCommand(
         String title,
         String content,
-        String category,
-        String author
+        PostCategory category,
+        Long authorId
 ) {
     public static CreatePostCommand of(
             String title,
             String content,
-            String category,
-            String author
+            PostCategory category,
+            Long authorId
     ) {
-        return new CreatePostCommand(title, content, category, author);
+        return new CreatePostCommand(title, content, category, authorId);
     }
-
 }

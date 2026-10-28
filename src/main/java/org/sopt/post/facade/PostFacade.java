@@ -1,71 +1,95 @@
 package org.sopt.post.facade;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+import java.util.stream.Collectors;
+import org.sopt.Member.domain.Member;
+import org.sopt.Member.service.MemberService;
+import org.sopt.common.dto.PageOffset;
+import org.sopt.common.dto.PageResult;
+import org.sopt.like.domain.Like;
+import org.sopt.like.service.LikeService;
+import org.sopt.post.controller.dto.response.PostListResponse;
 import org.sopt.post.controller.dto.response.PostResponse;
+import org.sopt.post.domain.Post;
+import org.sopt.post.domain.PostReader;
+import org.sopt.post.enums.PostCategory;
 import org.sopt.post.service.PostService;
 import org.sopt.post.service.vo.CreatePostCommand;
+import org.sopt.post.service.vo.PostSearchCondition;
 import org.sopt.post.service.vo.UpdatePostCommand;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
-// 현재 로직에서는 퍼사드 패턴은 사용하지 않아도 됩니다. 하지만 3,4주차 세미나 떄 JPA와 좋아요가 붙는다면에 가정을 두었습니다.
-// 저처럼 굳이 사서 고생하겠다면 추천드립니다...
 @Component
+@Transactional(readOnly = true)
 public class PostFacade {
     private final PostService postService;
-    private final ReadWriteLock lock = new ReentrantReadWriteLock();
-    //ReentrantLock은 읽기 쓰기를 분리하지 않고 그냥 막아버린다고 해서...
+    private final LikeService likeService;
+    private final MemberService memberService;
 
-    public PostFacade(PostService postService) {
+    public PostFacade(PostService postService, LikeService likeService, MemberService memberService) {
         this.postService = postService;
+        this.likeService = likeService;
+        this.memberService = memberService;
     }
 
+    @Transactional
     public void createPost(CreatePostCommand command) {
-        lock.writeLock().lock();
-        try {
-            postService.createPost(command);
-        } finally {
-            lock.writeLock().unlock();
-        }
+        postService.createPost(command);
     }
 
-    public List<PostResponse> getPosts(String category, int page, int size) {
-        lock.readLock().lock();
-        try {
-            return postService.getPosts(category, page, size).stream()
-                    .map(PostResponse::from)
-                    .toList();
-        } finally {
-            lock.readLock().unlock();
-        }
+    public PostListResponse getAllPosts(PageOffset pageOffset, PostCategory postCategory) {
+        PageResult<Post> posts = postService.getAllPosts(pageOffset, postCategory);
+        Map<Long, Long> likeMap = likeService.countLikes(posts.contents());
+        Map<Long, Member> memberMap = fetchAuthorMap(posts.contents());
+
+        return PostListResponse.of(posts, memberMap, likeMap);
+
     }
 
     public PostResponse getPost(Long postId) {
-        lock.writeLock().lock();
-        try {
-            return PostResponse.from(postService.getPost(postId));
-        } finally {
-            lock.writeLock().unlock();
-        }
+        Post post = postService.getPostById(postId);
+        Member author = memberService.getMemberById(post.getAuthorId());
+        Long like = likeService.countLike(postId);
+
+        return PostResponse.from(post, author, like);
     }
 
+    public PostListResponse searchPosts(PostSearchCondition condition, PageOffset pageOffset) {
+        PageResult<Post> posts = postService.searchPosts(condition, pageOffset);
+        Map<Long, Member> authorMap = fetchAuthorMap(posts.contents());
+        Map<Long, Long> likeMap = likeService.countLikes(posts.contents());
+
+        return PostListResponse.of(posts, authorMap, likeMap);
+    }
+
+    @Transactional
     public void updatePost(Long postId, UpdatePostCommand command) {
-        lock.writeLock().lock();
-        try {
-            postService.updatePost(postId, command);
-        } finally {
-            lock.writeLock().unlock();
-        }
+        postService.updatePost(postId, command);
     }
 
+    @Transactional
     public void deletePost(Long postId) {
-        lock.writeLock().lock();
-        try {
-            postService.deletePost(postId);
-        } finally {
-            lock.writeLock().unlock();
-        }
+        postService.deletePost(postId);
+    }
+
+    @Transactional
+    public boolean toggleLike(Long postId, Long memberId) {
+        return likeService.toggleLike(postId, memberId);
+    }
+
+
+    private Map<Long, Member> fetchAuthorMap(List<Post> posts) {
+        Set<Long> authorIds = posts
+                .stream()
+                .map(Post::getAuthorId)
+                .collect(Collectors.toUnmodifiableSet());
+
+        return memberService.getMemberMapByIds(authorIds);
     }
 }

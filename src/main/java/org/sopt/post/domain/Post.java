@@ -1,6 +1,7 @@
 package org.sopt.post.domain;
 
 
+import java.time.LocalDateTime;
 import org.sopt.post.enums.PostCategory;
 
 
@@ -9,29 +10,36 @@ public class Post {
     private String title;
     private String content;
     private PostCategory category;
-    private int hits;
-    private final String createdAt;
-    private String updatedAt;
-    private final String author;
+    private Long authorId;
+    private final LocalDateTime createdAt;
+    private final LocalDateTime updatedAt;
 
-    public Post(Long id, String title, String content, PostCategory category, int hits, String createdAt,
-                String updatedAt, String author) {
+    public Post(Long id, String title, String content, PostCategory category, Long authorId,
+                LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.category = category;
-        this.hits = hits;
+        this.authorId = authorId;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
-        this.author = author;
+    }
+
+    public static Post create(String title, String content, PostCategory category, Long authorId) {
+        return new Post(null, title, content, category, authorId, null, null);
+    }
+
+    public static Post createWithId(Long id, String title, String content, PostCategory category, Long authorId,
+                                    LocalDateTime createdAt,
+                                    LocalDateTime updatedAt) {
+        return new Post(id, title, content, category, authorId, createdAt, updatedAt);
     }
 
 
-    public void update(String title, String content, PostCategory category, String updatedAt) {
+    public void update(String title, String content, PostCategory category) {
         this.title = title;
         this.content = content;
         this.category = category;
-        this.updatedAt = updatedAt;
     }
 
     //Getter
@@ -52,24 +60,15 @@ public class Post {
         return category;
     }
 
-    public String getCreatedAt() {
-        return createdAt;
+    public Long getAuthorId() {
+        return authorId;
     }
 
-    public String getAuthor() {
-        return author;
-    }
-
-    public int getHits() {
-        return hits;
-    }
-
-    public String getUpdatedAt() {
+    public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
 
-    // 조회수 증가
-    public void increaseHits() {
-        hits++;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 }

@@ -1,11 +1,17 @@
 package org.sopt.post.controller;
 
-import java.util.List;
+import jakarta.validation.Valid;
+import java.util.Locale;
 import org.sopt.common.dto.CommonResponse;
+import org.sopt.common.dto.PageOffset;
 import org.sopt.post.code.PostSuccessCode;
 import org.sopt.post.controller.dto.request.CreatePostRequest;
 import org.sopt.post.controller.dto.request.UpdatePostRequest;
+import org.sopt.post.controller.dto.response.LikeToggleResponse;
+import org.sopt.post.controller.dto.response.PostListResponse;
+import org.sopt.post.enums.PostCategory;
 import org.sopt.post.facade.PostFacade;
+import org.sopt.post.service.vo.PostSearchCondition;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -29,23 +35,44 @@ public class PostController implements PostApi {
 
     @PostMapping
     public CommonResponse<Void> createPost(
-            @RequestBody(required = true) CreatePostRequest request
+            @Valid @RequestBody(required = true) CreatePostRequest request
     ) {
         postFacade.createPost(request.toCommand());
-
         return CommonResponse.success(PostSuccessCode.POST_CREATED);
 
     }
 
     @GetMapping
-    public CommonResponse<List<PostResponse>> readPosts(
+    public CommonResponse<PostListResponse> readPosts(
             @RequestParam(required = false, defaultValue = "FREE") String category,
             @RequestParam(required = false, defaultValue = "1") int page,
             @RequestParam(required = false, defaultValue = "10") int size
     ) {
-        List<PostResponse> result = postFacade.getPosts(category, page, size);
+        PostListResponse result = postFacade.getAllPosts(
+                PageOffset.of(page, size),
+                PostCategory.from(category.toUpperCase(Locale.ROOT))
+        );
 
         return CommonResponse.success(PostSuccessCode.POSTS_FOUND, result);
+    }
+
+    @GetMapping("/search")
+    public CommonResponse<PostListResponse> searchPosts(
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) Long authorId,
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false, defaultValue = "1") int page,
+            @RequestParam(required = false, defaultValue = "10") int size
+    ){
+        PostSearchCondition condition = new PostSearchCondition(
+                keyword,
+                authorId,
+                category == null || category.isBlank()
+                        ? null
+                        : PostCategory.from(category.toUpperCase(Locale.ROOT))
+        );
+        PostListResponse response = postFacade.searchPosts(condition, PageOffset.of(page, size));
+        return CommonResponse.success(PostSuccessCode.POST_FOUND, response);
     }
 
     @GetMapping(path = "/{postId}")
@@ -74,5 +101,18 @@ public class PostController implements PostApi {
     ) {
         postFacade.deletePost(postId);
         return CommonResponse.success(PostSuccessCode.POST_DELETED);
+    }
+
+    @PostMapping("/{postId}/like/{memberId}")
+    public CommonResponse<LikeToggleResponse> toggleLike(
+            @PathVariable Long postId,
+            @PathVariable Long memberId
+    ) {
+        boolean liked = postFacade.toggleLike(postId, memberId);
+        PostSuccessCode code = liked
+                ? PostSuccessCode.POST_LIKE
+                : PostSuccessCode.POST_UNLIKE;
+
+        return CommonResponse.success(code, new LikeToggleResponse(liked));
     }
 }

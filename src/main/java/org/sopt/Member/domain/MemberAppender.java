@@ -16,13 +16,14 @@ public class MemberAppender {
     @Transactional
     public Member append(
             String email,
+            String password,
             String name,
             String bio,
             Gender gender,
             Role role
     ) {
         Member member = Member.create(
-                email, name, bio, gender, role);
+                email, name, password, bio, gender, role);
 
         return memberRepository.save(member);
     }

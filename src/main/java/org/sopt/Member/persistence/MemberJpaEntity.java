@@ -1,6 +1,7 @@
 package org.sopt.Member.persistence;
 
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 
 import jakarta.persistence.GeneratedValue;
@@ -24,7 +25,11 @@ public class MemberJpaEntity extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, unique = true)
     private String email;
+
+    @Column(nullable = false)
+    private String password;
     private String name;
     private String bio;
     private Gender gender;
@@ -33,9 +38,10 @@ public class MemberJpaEntity extends BaseTimeEntity {
     protected MemberJpaEntity() {
     } // JPA 전용 생성자
 
-    public MemberJpaEntity(Long id, String email, String name, String bio, Gender gender, Role role) {
+    public MemberJpaEntity(Long id, String email, String password, String name, String bio, Gender gender, Role role) {
         this.id = id;
         this.email = email;
+        this.password = password;
         this.name = name;
         this.bio = bio;
         this.gender = gender;
@@ -43,7 +49,8 @@ public class MemberJpaEntity extends BaseTimeEntity {
     }
 
     public static MemberJpaEntity fromDomain(Member member) {
-        return new MemberJpaEntity(member.getId(), member.getEmail(), member.getName(), member.getBio(),
+        return new MemberJpaEntity(member.getId(), member.getEmail(), member.getPassword(), member.getName(),
+                member.getBio(),
                 member.getGender(), member.getRole());
     }
 
@@ -74,6 +81,6 @@ public class MemberJpaEntity extends BaseTimeEntity {
     }
 
     public Member toDomain() {
-        return Member.creatWithId(id, email, name, bio, gender, role);
+        return Member.creatWithId(id, email, password, name, bio, gender, role);
     }
 }

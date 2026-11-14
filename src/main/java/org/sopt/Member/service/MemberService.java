@@ -34,6 +34,7 @@ public class MemberService {
     public void createMember(CreateMemberCommand command) {
         memberAppender.append(
                 command.email(),
+                command.password(),
                 command.name(),
                 command.bio(),
                 command.gender(),

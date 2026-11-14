@@ -6,6 +6,8 @@ import org.sopt.Member.controller.dto.CreateMemberRequest;
 import org.sopt.Member.domain.Member;
 import org.sopt.Member.service.MemberService;
 import org.sopt.common.dto.CommonResponse;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,6 +25,13 @@ public class MemberController implements MemberApi {
         this.memberService = memberService;
     }
 
+
+    @GetMapping("/me")
+    public ResponseEntity<Long> me(@AuthenticationPrincipal Long memberId) {
+        return ResponseEntity.ok(memberId);
+    }
+
+
     @PostMapping
     public CommonResponse<Void> createMember(
             @RequestBody(required = true) CreateMemberRequest createMemberRequest
@@ -31,6 +40,7 @@ public class MemberController implements MemberApi {
 
         return CommonResponse.success(MemberSuccessCode.MEMBER_CREATED);
     }
+
     @GetMapping("/{id}")
     public CommonResponse<Member> getMember(
             @PathVariable(required = true) Long id
@@ -41,7 +51,7 @@ public class MemberController implements MemberApi {
 
     @GetMapping
     public CommonResponse<List<Member>> getAllMember() {
-        List<Member> members=  memberService.getMemberAll();
+        List<Member> members = memberService.getMemberAll();
         return CommonResponse.success(MemberSuccessCode.MEMBERS_FOUND, members);
     }
 

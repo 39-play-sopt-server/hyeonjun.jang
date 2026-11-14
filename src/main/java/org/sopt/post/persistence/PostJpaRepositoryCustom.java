@@ -6,4 +6,5 @@ import org.sopt.post.service.vo.PostSearchCondition;
 
 public interface PostJpaRepositoryCustom {
     Page<PostJpaEntity> search(PostSearchCondition condition, Pageable pageable);
+
 }

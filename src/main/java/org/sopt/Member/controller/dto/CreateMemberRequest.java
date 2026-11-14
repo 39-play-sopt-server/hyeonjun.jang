@@ -9,6 +9,7 @@ import org.sopt.common.validation.ValidationMessage;
 public record CreateMemberRequest(
         @NotBlank(message = ValidationMessage.EMAIL_REQUIRED)
         String email,
+        String password,
         @NotBlank(message = ValidationMessage.NAME_REQUIRED)
         String name,
         String bio,
@@ -17,6 +18,7 @@ public record CreateMemberRequest(
 
 ) {
     public static CreateMemberCommand toCommand(CreateMemberRequest request) {
-        return new CreateMemberCommand(request.email(), request.name(), request.bio(), request.gender(), request.role());
+        return new CreateMemberCommand(request.email(), request.password(), request.name(), request.bio(),
+                request.gender(), request.role());
     }
 }

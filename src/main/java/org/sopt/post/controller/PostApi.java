@@ -1,6 +1,7 @@
 package org.sopt.post.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.sopt.post.controller.dto.response.PostListResponse;
 import org.springframework.web.bind.annotation.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -26,7 +27,11 @@ public interface PostApi {
     @ApiExceptions({
             PostContentException.class, PostTitleException.class, PostInvalidCategory.class
     })
-    @Operation(summary = "게시글 작성", description = "새로운 게시글을 생성합니다.")
+    @Operation(
+            summary = "게시글 작성",
+            description = "새로운 게시글을 생성합니다.",
+            security = @SecurityRequirement(name = "bearerAuth")
+    )
     CommonResponse<Void> createPost(@RequestBody CreatePostRequest request);
 
     @ApiExceptions({PageException.class, SizeException.class, PostInvalidCategory.class})
@@ -53,14 +58,26 @@ public interface PostApi {
 
     @ApiExceptions({PostNotFoundException.class, PostEmptyUpdateValue.class, PostIdException.class,
             PostContentException.class, PostTitleException.class, PostInvalidCategory.class})
-    @Operation(summary = "게시글 수정", description = "게시글 ID로 게시글 제목, 내용, 카테고리를 수정합니다.")
+    @Operation(
+            summary = "게시글 수정",
+            description = "게시글 ID로 게시글 제목, 내용, 카테고리를 수정합니다.",
+            security = @SecurityRequirement(name = "bearerAuth")
+    )
     CommonResponse<Void> updatePost(@PathVariable Long postId, @RequestBody UpdatePostRequest request);
 
     @ApiExceptions({PostNotFoundException.class, PostIdException.class})
-    @Operation(summary = "게시글 삭제", description = "게시글 ID로 게시글을 삭제합니다.")
+    @Operation(
+            summary = "게시글 삭제",
+            description = "게시글 ID로 게시글을 삭제합니다.",
+            security = @SecurityRequirement(name = "bearerAuth")
+    )
     CommonResponse<Void> deletePost(@PathVariable Long postId);
 
-    @Operation(summary = "게시글 좋아요 토글", description = "회원이 게시글에 좋아요를 누르거나 취소합니다.")
+    @Operation(
+            summary = "게시글 좋아요 토글",
+            description = "회원이 게시글에 좋아요를 누르거나 취소합니다.",
+            security = @SecurityRequirement(name = "bearerAuth")
+    )
     CommonResponse<LikeToggleResponse> toggleLike(@PathVariable Long postId, @PathVariable Long memberId);
 
 }

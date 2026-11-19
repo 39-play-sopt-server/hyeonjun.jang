@@ -1,0 +1,27 @@
+package org.sopt.auth.domain;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+@Component
+@RequiredArgsConstructor
+public class RefreshTokenRotator {
+
+    private final RefreshTokenReader refreshTokenReader;
+    private final RefreshTokenRepository refreshTokenRepository;
+    @Value("${security.jwt.refresh-token-expires-in-seconds:1209600}")
+    private long refreshTokenExpiresInSeconds;
+
+    public void rotate(final Long userId, final String newToken) {
+        RefreshToken refreshToken = refreshTokenReader.readOrNull(userId);
+
+        if (refreshToken != null) {
+            refreshToken.rotate(newToken, refreshTokenExpiresInSeconds);
+        } else {
+            refreshToken = RefreshToken.create(userId, newToken, refreshTokenExpiresInSeconds);
+        }
+
+        refreshTokenRepository.save(refreshToken);
+    }
+}

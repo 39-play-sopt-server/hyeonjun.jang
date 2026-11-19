@@ -38,11 +38,13 @@ public record PostListResponse(
             LocalDateTime createdAt
     ) {
         public static PostItem from(Post post, Member author, long likeCount) {
+            String authorName = author == null ? "탈퇴한 사용자" : author.getName();
+
             return new PostItem(
                     post.getId(),
                     post.getTitle(),
                     post.getContent(),
-                    author.getName(),
+                    authorName,
                     post.getCategory(),
                     likeCount,
                     post.getCreatedAt()

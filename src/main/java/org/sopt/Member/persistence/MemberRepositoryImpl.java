@@ -51,7 +51,8 @@ public class MemberRepositoryImpl implements MemberRepository {
 
     @Override
     public Optional<Member> findByEmail(String email) {
-        return memberJpaRepository.findByEmail(email);
+        return memberJpaRepository.findByEmail(email)
+                .map(MemberJpaEntity::toDomain);
     }
 
     @Override

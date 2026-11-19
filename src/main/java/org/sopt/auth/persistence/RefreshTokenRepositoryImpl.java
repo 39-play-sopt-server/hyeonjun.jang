@@ -1,0 +1,36 @@
+package org.sopt.auth.persistence;
+
+import java.util.Optional;
+import lombok.RequiredArgsConstructor;
+import org.sopt.auth.domain.RefreshToken;
+import org.sopt.auth.domain.RefreshTokenRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+@RequiredArgsConstructor
+public class RefreshTokenRepositoryImpl implements RefreshTokenRepository {
+
+    private final RefreshTokenJpaRepository refreshTokenJpaRepository;
+
+    @Override
+    public void save(RefreshToken refreshToken) {
+        refreshTokenJpaRepository.save(RefreshTokenJpaEntity.from(refreshToken));
+    }
+
+    @Override
+    public Optional<RefreshToken> findByUserId(Long userId) {
+        return refreshTokenJpaRepository.findByUserId(userId)
+                .map(RefreshTokenJpaEntity::toDomain);
+    }
+
+    @Override
+    public Optional<RefreshToken> findByToken(String token) {
+        return refreshTokenJpaRepository.findByToken(token)
+                .map(RefreshTokenJpaEntity::toDomain);
+    }
+
+    @Override
+    public void deleteByUserId(Long userId) {
+        refreshTokenJpaRepository.deleteByUserId(userId);
+    }
+}

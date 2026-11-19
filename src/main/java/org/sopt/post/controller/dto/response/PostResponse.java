@@ -20,7 +20,7 @@ public record PostResponse(
                 post.getContent(),
                 post.getCategory(),
                 likeCount,
-                AuthorInfo.from(member)
+                AuthorInfo.from(member, post.getAuthorId())
         );
     }
 
@@ -29,7 +29,10 @@ public record PostResponse(
             String name,
             String bio
     ) {
-        public static AuthorInfo from(Member member) {
+        public static AuthorInfo from(Member member, Long authorId) {
+            if (member == null) {
+                return new AuthorInfo(authorId, "탈퇴한 사용자", null);
+            }
             return new AuthorInfo(member.getId(), member.getName(), member.getBio());
         }
     }

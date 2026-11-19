@@ -54,7 +54,8 @@ public class PostFacade {
 
     public PostResponse getPost(Long postId) {
         Post post = postService.getPostById(postId);
-        Member author = memberService.getMemberById(post.getAuthorId());
+        Member author = memberService.findMemberById(post.getAuthorId())
+                .orElse(null);
         Long like = likeService.countLike(postId);
 
         return PostResponse.from(post, author, like);
